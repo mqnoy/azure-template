@@ -1,0 +1,142 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "containerGroups_imza_mc_name": {
+            "defaultValue": "imza-mc",
+            "type": "String"
+        }
+    },
+    "variables": {},
+    "resources": [
+        {
+            "type": "Microsoft.ContainerInstance/containerGroups",
+            "apiVersion": "2018-10-01",
+            "name": "[parameters('containerGroups_imza_mc_name')]",
+            "location": "southeastasia",
+            "tags": {
+                "minecraft": "imzamc"
+            },
+            "properties": {
+                "containers": [
+                    {
+                        "name": "[parameters('containerGroups_imza_mc_name')]",
+                        "properties": {
+                            "image": "itzg/minecraft-server",
+                            "ports": [
+                                {
+                                    "protocol": "TCP",
+                                    "port": 80
+                                },
+                                {
+                                    "protocol": "TCP",
+                                    "port": 25565
+                                },
+                                {
+                                    "protocol": "TCP",
+                                    "port": 8192
+                                },
+                                {
+                                    "protocol": "TCP",
+                                    "port": 22
+                                }
+                            ],
+                            "environmentVariables": [
+                                {
+                                    "name": "EULA",
+                                    "value": "true"
+                                },
+                                {
+                                    "name": "ENABLE_RCON",
+                                    "value": "false"
+                                },
+                                {
+                                    "name": "RCON_PASSWORD",
+                                    "value": "testing"
+                                },
+                                {
+                                    "name": "RCON_PORT",
+                                    "value": "28016"
+                                },
+                                {
+                                    "name": "REPLACE_ENV_VARIABLES",
+                                    "value": "true"
+                                },
+                                {
+                                    "name": "ENV_VARIABLE_PREFIX",
+                                    "value": "CFG_"
+                                },
+                                {
+                                    "name": "TYPE",
+                                    "value": "PAPER"
+                                },
+                                {
+                                    "name": "PAPERBUILD",
+                                    "value": "243"
+                                },
+                                {
+                                    "name": "VERSION",
+                                    "value": "1.14.4"
+                                },
+                                {
+                                    "name": "MEMORY",
+                                    "value": "2048M"
+                                },
+                                {
+                                    "name": "MAX_MEMORY",
+                                    "value": "3G"
+                                }
+                            ],
+                            "resources": {
+                                "requests": {
+                                    "memoryInGB": 3,
+                                    "cpu": 2
+                                }
+                            },
+                            "volumeMounts": [
+                                {
+                                    "name": "filesharevolume",
+                                    "mountPath": "/data"
+                                }
+                            ]
+                        }
+                    }
+                ],
+                "restartPolicy": "Always",
+                "osType": "Linux",
+                "ipAddress": {
+                    "ports": [
+                        {
+                            "protocol": "TCP",
+                            "port": 80
+                        },
+                        {
+                            "protocol": "TCP",
+                            "port": 25565
+                        },
+                        {
+                            "protocol": "TCP",
+                            "port": 8192
+                        },
+                        {
+                            "protocol": "TCP",
+                            "port": 22
+                        }
+                    ],
+                    "type": "Public",
+                    "dnsNameLabel": "imzamc"
+                },
+                "volumes": [
+                    {
+                        "name": "filesharevolume",
+                        "azureFile": {
+                            "sharename": "YOUR_SHARE_NAME",
+                            "storageAccountName": "YOUR_STORAGE_ACCOUNT_NAME",
+                            "storageAccountKey": "YOUR_STORAGE_ACCOUNT_KEY"
+                        }
+                    }
+                ]
+            }
+        }
+    ]
+}
